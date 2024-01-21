@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
-import plotly.figure_factory as ff
 import seaborn as sns
 from wordcloud import WordCloud
 # these are python files
@@ -15,6 +14,8 @@ df = pd.read_csv("Dataset/OLX_cars_dataset00.csv")
 # preprocess it 
 df = preprocessing.preprocess_dataset(df)
 
+# setting title and icon of streamlit app
+st.set_page_config(page_title="Data Analysis OLX Cars Dataset", page_icon="CarImg.png")
 # streamlit sidebar
 st.sidebar.image("https://github.com/AbdullahKhanKakar/My-Dataset-Collection/blob/main/Image.jpg?raw=true")
 st.sidebar.title("OLX Cars Data Analysis")
@@ -76,12 +77,11 @@ if user_menu=="Overall Analysis":
 
     # 4. Prices Distribution
     st.title("Price Distribution with KDE")
-    fig = ff.create_distplot([df["Price"]], ["Price"], colors=["skyblue"], show_hist=False, show_rug=False, show_curve=True)
-    fig.update_layout(
-        xaxis_title="Price",
-        yaxis_title="Density"
-    )
-    st.plotly_chart(fig)
+    fig, ax = plt.subplots()
+    ax = sns.histplot(df['Price'], kde=True, color='skyblue', bins=10)
+    ax.set_xlabel('Price')
+    ax.set_ylabel('Count')
+    st.pyplot(fig)
 
     # 5. Years Distribution
     st.title("Years Distribution")
@@ -273,13 +273,12 @@ if user_menu == "Brand-wise Analysis":
     st.plotly_chart(fig)
 
     # 4. Prices Distribution
-    st.title(f"{selected_company} Models Price Distribution with KDE")
-    fig = ff.create_distplot([brands_df["Price"]], ["Price"], colors=["skyblue"], show_hist=False, show_rug=False, show_curve=True)
-    fig.update_layout(
-        xaxis_title="Price",
-        yaxis_title="Density"
-    )
-    st.plotly_chart(fig)
+    st.title("Price Distribution with KDE")
+    fig, ax = plt.subplots()
+    ax = sns.histplot(brands_df['Price'], kde=True, color='skyblue', bins=10)
+    ax.set_xlabel('Price')
+    ax.set_ylabel('Count')
+    st.pyplot(fig)
 
     # 5. Years Distribution
     st.title(f"{selected_company} Models Years Distribution")
